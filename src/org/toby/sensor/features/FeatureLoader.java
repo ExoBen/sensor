@@ -1,6 +1,7 @@
 package org.toby.sensor.features;
 
 import KinectPV2.KinectPV2;
+import gab.opencv.OpenCV;
 import org.toby.sensor.features.instances.*;
 import org.toby.sensor.interfaces.LoadersInterface;
 import processing.core.PApplet;
@@ -40,7 +41,7 @@ public class FeatureLoader implements LoadersInterface {
     statics = loadStatics(p);
   }
 
-  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect) {
+  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
     PImage outputVideo;
     if (currentFeature != null) {
       if (frame < 6) {

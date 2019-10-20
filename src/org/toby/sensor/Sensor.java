@@ -1,6 +1,7 @@
 package org.toby.sensor;
 
 import KinectPV2.*;
+import gab.opencv.*;
 import org.toby.sensor.base.BaseLoader;
 import org.toby.sensor.bugs.BugLoader;
 import org.toby.sensor.features.FeatureLoader;
@@ -22,6 +23,7 @@ public class Sensor extends PApplet {
 
   private TextOverlay textOverlay;
   private KinectPV2 kinect;
+  private OpenCV openCV;
   private long timeBegin;
   private long timeOfLastFeature;
 
@@ -45,25 +47,25 @@ public class Sensor extends PApplet {
     textOverlay = new TextOverlay(this);
     timeBegin = System.currentTimeMillis();
     timeOfLastFeature = timeBegin;
+    openCV = new OpenCV(this, 512, 424);
     setUpKinect(this);
     setUpSounds();
     textFont(createFont("F:/SkyDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
+    background(0);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
 
   public void draw() {
-    background(0);
-    noTint();
     long currentTime = System.currentTimeMillis() - timeBegin;
     PImage bodies = Upscaler.upscaler(kinect.getBodyTrackImage().get(39, 32, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH * KINECT_HEIGHT);
     bodies.filter(THRESHOLD);
     PImage liveVideo = kinect.getColorImage().get(LEFT_OFFSET, 0, MAIN_WIDTH, MAIN_HEIGHT);
     liveVideo.filter(GRAY);
 
-    boolean shouldBug = rand.nextInt(40) == 0;
+    boolean shouldBug = rand.nextInt(200) == 0;
     long timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
-    boolean toFeature = (timeSinceLastFeature > 5000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 8000;
+    boolean toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 14000;
 
     PImage outputVideo;
     if (starting) {
@@ -74,20 +76,20 @@ public class Sensor extends PApplet {
         outputVideo = liveVideo;
         if (toFeature || currentlyFeaturing) {
           //featuring
-          outputVideo = feature.execute(liveVideo, bodies, kinect);
+          outputVideo = feature.execute(liveVideo, bodies, kinect, openCV);
           currentlyFeaturing = feature.isCurrentlyFeaturing();
           timeOfLastFeature = System.currentTimeMillis();
         }
         if (shouldBug || currentlyBugging) {
           //bugging
-          outputVideo = bug.execute(outputVideo, bodies, kinect);
+          outputVideo = bug.execute(outputVideo, bodies, kinect, openCV);
           currentlyBugging = bug.isCurrentlyBugging();
         }
+        image(outputVideo, LEFT_DISPLAY_OFFSET, 0);
       } else {
         //basing
-        outputVideo = base.executeBase(liveVideo, bodies, kinect);
+        base.execute(liveVideo, bodies, kinect, openCV, this);
       }
-      image(outputVideo, LEFT_DISPLAY_OFFSET, 0);
       textOverlay.displayBodyCountOverlay(kinect.getBodyTrackUser().size());
       textOverlay.info(currentTime, kinect);
     }
@@ -120,7 +122,10 @@ public class Sensor extends PApplet {
     kinect.enableBodyTrackImg(true);
     kinect.enableDepthImg(true);
     kinect.enableInfraredImg(true);
+    kinect.enablePointCloud(true);
     kinect.init();
+    kinect.setLowThresholdPC(100);
+    kinect.setHighThresholdPC(2300);
   }
 
   public void mousePressed() {
