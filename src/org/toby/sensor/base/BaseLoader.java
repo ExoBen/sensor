@@ -5,14 +5,10 @@ import processing.core.PImage;
 
 public class BaseLoader {
 
-  private Ghosting ghost;
+  public BaseLoader() {}
 
-  public BaseLoader() {
-    ghost = new Ghosting();
-  }
-
-  public PImage executeBase(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
-    return ghost.execute(liveVideo, body, savedBackground, kinect);
+  public PImage executeBase(PImage liveVideo, PImage body, KinectPV2 kinect) {
+    return liveVideo;
   }
 
 }

@@ -2,7 +2,7 @@ package org.toby.sensor.bugs;
 
 import KinectPV2.KinectPV2;
 import org.toby.sensor.bugs.instances.*;
-import org.toby.sensor.features.instances.Invert;
+import org.toby.sensor.bugs.instances.Invert;
 import org.toby.sensor.interfaces.LoadersInterface;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -20,8 +20,6 @@ public class BugLoader implements LoadersInterface {
   private LightDarkGreyMask lightDarkGreyMask;
   private BlackAndWhiteVideo blackAndWhiteVideo;
   private Invert invert;
-  private SavedBackgroundOnBlack savedBackgroundOnBlack;
-  private BWStaticOnSavedBackground bWStaticOnSavedBackground;
   private DownloadedStatic downloadedStatic;
 
   private boolean currentlyBugging;
@@ -36,22 +34,20 @@ public class BugLoader implements LoadersInterface {
     lightDarkGreyMask = new LightDarkGreyMask();
     blackAndWhiteVideo = new BlackAndWhiteVideo();
     invert = new Invert();
-    savedBackgroundOnBlack = new SavedBackgroundOnBlack();
-    bWStaticOnSavedBackground = new BWStaticOnSavedBackground();
     downloadedStatic = new DownloadedStatic(p);
   }
 
-  public PImage execute(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
+  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect) {
     PImage outputVideo;
 
     if (currentBug != null) {
-      outputVideo = executeBug(liveVideo, body, savedBackground, kinect);
+      outputVideo = executeBug(liveVideo, body, kinect);
       if (System.currentTimeMillis() > bugStartTime + currentBugLength) {
         currentBug = null;
         currentlyBugging = false;
       }
     } else {
-      int dice = rand.nextInt(8);
+      int dice = rand.nextInt(6);
       switch (dice) {
         case 0:
           currentBug = darkLightGreyMask;
@@ -68,12 +64,6 @@ public class BugLoader implements LoadersInterface {
         case 4:
           currentBug = invert;
           break;
-        case 5:
-          currentBug = savedBackgroundOnBlack;
-          break;
-        case 6:
-          currentBug = bWStaticOnSavedBackground;
-          break;
         default:
           currentBug = downloadedStatic;
       }
@@ -81,25 +71,25 @@ public class BugLoader implements LoadersInterface {
       currentBugLength = rand.nextInt(200) + 100;
       currentlyBugging = true;
       bugStartTime = System.currentTimeMillis();
-      outputVideo = executeBug(liveVideo, body, savedBackground, kinect);
+      outputVideo = executeBug(liveVideo, body, kinect);
     }
     return outputVideo;
   }
 
-  public PImage executeDownloadedStatic(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
+  public PImage executeDownloadedStatic(PImage liveVideo, PImage body, KinectPV2 kinect) {
     currentBug = downloadedStatic;
     sounds.playSound();
     currentBugLength = rand.nextInt(100) + 200;
     currentlyBugging = true;
     bugStartTime = System.currentTimeMillis();
-    return executeBug(liveVideo, body, savedBackground, kinect);
+    return executeBug(liveVideo, body, kinect);
   }
 
   public boolean isCurrentlyBugging() {
     return currentlyBugging;
   }
 
-  private PImage executeBug(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
-    return currentBug.executeBug(liveVideo, body, savedBackground, kinect);
+  private PImage executeBug(PImage liveVideo, PImage body, KinectPV2 kinect) {
+    return currentBug.executeBug(liveVideo, body, kinect);
   }
 }

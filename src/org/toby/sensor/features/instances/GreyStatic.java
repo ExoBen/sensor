@@ -10,7 +10,7 @@ import static org.toby.sensor.UtilitiesAndConstants.KINECT_WIDTH;
 
 public class GreyStatic extends AbstractFeature {
 
-  public PImage executeFeature(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
+  public PImage executeFeature(PImage liveVideo, PImage body, KinectPV2 kinect) {
     return Upscaler.upscaler(kinect.getDepthImage(), KINECT_WIDTH*KINECT_HEIGHT);
   }
 

@@ -24,7 +24,7 @@ public class DownloadedStatic extends AbstractBug {
     startingPoint = 0;
   }
 
-  public PImage executeBug(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
+  public PImage executeBug(PImage liveVideo, PImage body, KinectPV2 kinect) {
     frame++;
     if (frame%3 == 0) {
       frame = 0;

@@ -19,10 +19,10 @@ public class FeatureLoader implements LoadersInterface {
   private Random rand;
   private AbstractFeature currentFeature;
 
+  // features
   private DepthImage depthImage;
   private GreyStatic greyStatic;
   private BlackAndWhiteStatic blackAndWhiteStatic;
-  private ShowThePast showThePast;
 
   private boolean currentlyFeaturing;
   private long featureStartTime;
@@ -38,18 +38,17 @@ public class FeatureLoader implements LoadersInterface {
     rand = new Random();
     depthImage = new DepthImage();
     greyStatic = new GreyStatic();
-    showThePast = new ShowThePast();
     blackAndWhiteStatic = new BlackAndWhiteStatic();
     statics = loadStatics(p);
   }
 
-  public PImage execute(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
+  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect) {
     PImage outputVideo;
     if (currentFeature != null) {
       if (frame < 6) {
         outputVideo = statics.get(startingPoint + frame/2);
       } else {
-        outputVideo = executeFeature(liveVideo, body, savedBackground, kinect);
+        outputVideo = executeFeature(liveVideo, body, kinect);
         if (System.currentTimeMillis() > featureStartTime + 2000) {
           currentFeature = null;
           currentlyFeaturing = false;
@@ -57,7 +56,7 @@ public class FeatureLoader implements LoadersInterface {
       }
       frame++;
     } else {
-      int dice = rand.nextInt(4);
+      int dice = rand.nextInt(3);
       switch (dice) {
         case 0:
           currentFeature = depthImage;
@@ -65,18 +64,15 @@ public class FeatureLoader implements LoadersInterface {
         case 1:
           currentFeature = blackAndWhiteStatic;
           break;
-        case 2:
-          currentFeature = greyStatic;
-          break;
         default:
-          currentFeature = showThePast;
+          currentFeature = greyStatic;
       }
       sounds.playSound();
       currentlyFeaturing = true;
       featureStartTime = System.currentTimeMillis();
       frame = 0;
       startingPoint = startingPoints[rand.nextInt(4)];
-      outputVideo = executeFeature(liveVideo, body, savedBackground, kinect);
+      outputVideo = executeFeature(liveVideo, body, kinect);
     }
     return outputVideo;
   }
@@ -85,8 +81,8 @@ public class FeatureLoader implements LoadersInterface {
     return currentlyFeaturing;
   }
 
-  private PImage executeFeature(PImage liveVideo, PImage body, PImage savedBackground, KinectPV2 kinect) {
-    return currentFeature.executeFeature(liveVideo, body, savedBackground, kinect);
+  private PImage executeFeature(PImage liveVideo, PImage body, KinectPV2 kinect) {
+    return currentFeature.executeFeature(liveVideo, body, kinect);
   }
 }
 
