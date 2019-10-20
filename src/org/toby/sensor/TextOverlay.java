@@ -37,7 +37,6 @@ class TextOverlay {
   }
 
   void displayBodyCountOverlay(int bodies) {
-    System.out.println(bodies);
     parent.textSize(48);
     parent.fill(255);
     parent.text(bodies, RIGHT_DISPLAY_OFFSET -70, 70);

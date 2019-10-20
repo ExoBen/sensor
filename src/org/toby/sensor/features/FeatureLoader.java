@@ -21,7 +21,6 @@ public class FeatureLoader implements LoadersInterface {
 
   // features
   private DepthImage depthImage;
-  private GreyStatic greyStatic;
   private BlackAndWhiteStatic blackAndWhiteStatic;
 
   private boolean currentlyFeaturing;
@@ -37,7 +36,6 @@ public class FeatureLoader implements LoadersInterface {
     sounds = new FeatureSounds(p);
     rand = new Random();
     depthImage = new DepthImage();
-    greyStatic = new GreyStatic();
     blackAndWhiteStatic = new BlackAndWhiteStatic();
     statics = loadStatics(p);
   }
@@ -49,23 +47,20 @@ public class FeatureLoader implements LoadersInterface {
         outputVideo = statics.get(startingPoint + frame/2);
       } else {
         outputVideo = executeFeature(liveVideo, body, kinect);
-        if (System.currentTimeMillis() > featureStartTime + 2000) {
+        if (System.currentTimeMillis() > featureStartTime + 3000) {
           currentFeature = null;
           currentlyFeaturing = false;
         }
       }
       frame++;
     } else {
-      int dice = rand.nextInt(3);
+      int dice = rand.nextInt(2);
       switch (dice) {
         case 0:
           currentFeature = depthImage;
           break;
-        case 1:
-          currentFeature = blackAndWhiteStatic;
-          break;
         default:
-          currentFeature = greyStatic;
+          currentFeature = blackAndWhiteStatic;
       }
       sounds.playSound();
       currentlyFeaturing = true;
