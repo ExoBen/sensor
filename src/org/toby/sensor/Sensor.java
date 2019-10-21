@@ -58,9 +58,11 @@ public class Sensor extends PApplet {
 
   public void draw() {
     long currentTime = System.currentTimeMillis() - timeBegin;
-    PImage bodies = Upscaler.upscaler(kinect.getBodyTrackImage().get(39, 32, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH * KINECT_HEIGHT);
+    PImage bodies = ImageManipulation.cropper(
+        ImageManipulation.upscaler(kinect.getBodyTrackImage().get(16, 13, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH * KINECT_HEIGHT)
+    );
     bodies.filter(THRESHOLD);
-    PImage liveVideo = kinect.getColorImage().get(LEFT_OFFSET, 0, MAIN_WIDTH, MAIN_HEIGHT);
+    PImage liveVideo = kinect.getColorImage().get(HEIGHT_CUT, 0, SET_WIDTH, SET_HEIGHT);
     liveVideo.filter(GRAY);
 
     boolean shouldBug = rand.nextInt(200) == 0;
@@ -85,11 +87,12 @@ public class Sensor extends PApplet {
           outputVideo = bug.execute(outputVideo, bodies, kinect, openCV);
           currentlyBugging = bug.isCurrentlyBugging();
         }
-        image(outputVideo, LEFT_DISPLAY_OFFSET, 0);
+        image(outputVideo, 0, 0);
       } else {
         //basing
         base.execute(liveVideo, bodies, kinect, openCV, this);
       }
+      borders();
       textOverlay.displayBodyCountOverlay(kinect.getBodyTrackUser().size());
       textOverlay.info(currentTime, kinect);
     }
@@ -114,6 +117,14 @@ public class Sensor extends PApplet {
     if (softFuzz.isPlaying()) {
       softFuzz.stop();
     }
+  }
+
+
+  private void borders() {
+    this.fill(0);
+    this.stroke(0);
+    this.rect(0, 0, SET_WIDTH, HEIGHT_CUT);
+    this.rect(0, SET_HEIGHT+HEIGHT_CUT, SET_WIDTH, 1080);
   }
 
   private void setUpKinect(Sensor sensor) {

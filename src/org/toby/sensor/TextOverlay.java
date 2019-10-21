@@ -19,37 +19,36 @@ class TextOverlay {
 
   void info(long currentTime, KinectPV2 kinect) {
     // time
-    parent.textSize(48);
-    parent.fill(255);
+    parent.textSize(48); // medium
+    parent.fill(255); //white
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy\nHH:mm:ss");
     String dateTime = sdf.format(new Date());
-    parent.text(dateTime, RIGHT_DISPLAY_OFFSET - 270, 995);
+    parent.text(dateTime, SET_WIDTH-270, SET_HEIGHT+HEIGHT_CUT-85);
 
     // flashing red recording
-    parent.text("REC", LEFT_OFFSET + 50, 70);
+    parent.text("REC", 50, HEIGHT_CUT+70);
     if ((int)floor(currentTime/1000) % 2 == 0) {
-      parent.fill(255, 0, 0);
-      parent.stroke(255, 0, 0);
-      parent.rect(LEFT_OFFSET + 150, 39, 16, 24);
-      parent.rect(LEFT_OFFSET + 146, 43, 24, 16);
+      parent.fill(255, 0, 0); // red
+      parent.stroke(255, 0, 0); // white
+      parent.rect(150, HEIGHT_CUT+39, 16, 24);
+      parent.rect(146, HEIGHT_CUT+43, 24, 16);
     }
-
   }
 
   void displayBodyCountOverlay(int bodies) {
-    parent.textSize(48);
-    parent.fill(255);
-    parent.text(bodies, RIGHT_DISPLAY_OFFSET -70, 70);
+    parent.textSize(48); // medium text
+    parent.fill(255); //white
+    parent.text(bodies, SET_WIDTH-70, HEIGHT_CUT+70);
   }
 
   void startScreen(long currentTime, boolean starting) {
     if (starting) {
-      parent.textSize(48);
-      parent.fill(255);
-      parent.text("STARTING", LEFT_OFFSET + 50, 70);
+      parent.textSize(48); // medium text
+      parent.fill(255); //white
+      parent.text("STARTING", 50, HEIGHT_CUT+70);
     }
 
-    parent.textSize(100);
+    parent.textSize(100); //big text
     parent.text("COME AND DIE", 387, 520);
   }
 

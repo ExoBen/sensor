@@ -9,18 +9,12 @@ public class UtilitiesAndConstants {
 
   public static final int BLACK = -16777216;
   public static final int WHITE = -1;
-  public static final int LEFT_OFFSET = 309;
-  public static final int LEFT_DISPLAY_OFFSET = 289;
-  public static final int RIGHT_LENGTH = 1611;
-  public static final int RIGHT_DISPLAY_OFFSET = 1591;
-  public static final int MAIN_WIDTH = 1302;
-  public static final int MAIN_HEIGHT = 1080;
+  public static final int SET_WIDTH = 1920;
+  public static final int SET_HEIGHT = 720;
+  public static final int HEIGHT_CUT = 180;
 
-  public static final int KINECT_WIDTH = 434;
-  public static final int KINECT_HEIGHT = 360;
-
-  public static final float TIME_BEFORE_FADE = 7500f;
-  public static final float TIME_FADING = 500f;
+  public static final int KINECT_WIDTH = 480;
+  public static final int KINECT_HEIGHT = 398;
 
   public UtilitiesAndConstants() {}
 

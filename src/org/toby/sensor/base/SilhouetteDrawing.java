@@ -8,11 +8,15 @@ import processing.core.PVector;
 
 import java.util.ArrayList;
 
+import static org.toby.sensor.UtilitiesAndConstants.HEIGHT_CUT;
+import static org.toby.sensor.UtilitiesAndConstants.SET_HEIGHT;
+
 class SilhouetteDrawing {
 
   void execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, PApplet parent) {
     parent.fill(0, 2);
-    parent.rect(0, 0, 1920, 1080);
+    parent.stroke(0);
+    parent.rect(0, HEIGHT_CUT, 1920, SET_HEIGHT);
 
     parent.noFill();
     parent.strokeWeight(2.5f);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.toby.sensor.UtilitiesAndConstants.loadStatics;
+import static org.toby.sensor.UtilitiesAndConstants.*;
 
 public class FeatureLoader implements LoadersInterface {
 
@@ -42,12 +42,12 @@ public class FeatureLoader implements LoadersInterface {
   }
 
   public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
-    PImage outputVideo;
+    PImage outputImage;
     if (currentFeature != null) {
       if (frame < 6) {
-        outputVideo = statics.get(startingPoint + frame/2);
+        outputImage = statics.get(startingPoint + frame/2);
       } else {
-        outputVideo = executeFeature(liveVideo, body, kinect);
+        outputImage = executeFeature(liveVideo, body, kinect);
         if (System.currentTimeMillis() > featureStartTime + 3000) {
           currentFeature = null;
           currentlyFeaturing = false;
@@ -68,9 +68,11 @@ public class FeatureLoader implements LoadersInterface {
       featureStartTime = System.currentTimeMillis();
       frame = 0;
       startingPoint = startingPoints[rand.nextInt(4)];
-      outputVideo = executeFeature(liveVideo, body, kinect);
+      outputImage = executeFeature(liveVideo, body, kinect);
     }
-    return outputVideo;
+    PImage border = new PImage(SET_WIDTH, SET_HEIGHT+HEIGHT_CUT);
+    border.set(0, HEIGHT_CUT, outputImage);
+    return border;
   }
 
   public boolean isCurrentlyFeaturing() {

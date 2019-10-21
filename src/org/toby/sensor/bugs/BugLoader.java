@@ -10,6 +10,8 @@ import processing.core.PImage;
 
 import java.util.Random;
 
+import static org.toby.sensor.UtilitiesAndConstants.*;
+
 public class BugLoader implements LoadersInterface {
 
   private BugSounds sounds;
@@ -35,10 +37,10 @@ public class BugLoader implements LoadersInterface {
   }
 
   public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
-    PImage outputVideo;
+    PImage outputImage;
 
     if (currentBug != null) {
-      outputVideo = executeBug(liveVideo, body, kinect);
+      outputImage = executeBug(liveVideo, body, kinect);
       if (System.currentTimeMillis() > bugStartTime + currentBugLength) {
         currentBug = null;
         currentlyBugging = false;
@@ -62,9 +64,11 @@ public class BugLoader implements LoadersInterface {
       currentBugLength = rand.nextInt(200) + 100;
       currentlyBugging = true;
       bugStartTime = System.currentTimeMillis();
-      outputVideo = executeBug(liveVideo, body, kinect);
+      outputImage = executeBug(liveVideo, body, kinect);
     }
-    return outputVideo;
+    PImage border = new PImage(SET_WIDTH, SET_HEIGHT+HEIGHT_CUT);
+    border.set(0, HEIGHT_CUT, outputImage);
+    return border;
   }
 
   public boolean isCurrentlyBugging() {
