@@ -14,7 +14,7 @@ public class DownloadedStatic extends AbstractBug {
 
   private Random rand;
   private ArrayList<PImage> statics;
-  private Integer[] startingPoints = new Integer[] {0,3,6,9};
+  private Integer[] startingPoints = new Integer[] {0,10,20};
   private Integer startingPoint;
   private int frame = 0;
 
@@ -26,9 +26,9 @@ public class DownloadedStatic extends AbstractBug {
 
   public PImage executeBug(PImage liveVideo, PImage body, KinectPV2 kinect) {
     frame++;
-    if (frame%3 == 0) {
+    if (frame%10 == 0) {
       frame = 0;
-      startingPoint = startingPoints[rand.nextInt(4)];
+      startingPoint = startingPoints[rand.nextInt(3)];
     }
     return statics.get(startingPoint+frame);
   }

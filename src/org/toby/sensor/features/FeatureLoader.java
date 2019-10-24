@@ -44,7 +44,7 @@ public class FeatureLoader implements LoadersInterface {
   public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
     PImage outputImage;
     if (currentFeature != null) {
-      if (frame < 6) {
+      if (frame < 20) {
         outputImage = statics.get(startingPoint + frame/2);
       } else {
         outputImage = executeFeature(liveVideo, body, kinect);

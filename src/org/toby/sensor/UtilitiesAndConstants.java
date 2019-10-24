@@ -33,7 +33,7 @@ public class UtilitiesAndConstants {
 
   public static ArrayList<PImage> loadStatics(PApplet parent) {
     ArrayList<PImage> statics = new ArrayList<>();
-    for (int i = 1; i < 13; i++) {
+    for (int i = 1; i <= 30; i++) {
       String background = "F:/SkyDrive/Work/NEoN/sensor/resources/imagesOfStatic/static" + i + ".png";
       statics.add(parent.loadImage(background));
     }

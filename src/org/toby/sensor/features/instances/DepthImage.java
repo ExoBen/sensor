@@ -11,7 +11,7 @@ public class DepthImage extends AbstractFeature {
 
   public PImage executeFeature(PImage liveVideo, PImage body, KinectPV2 kinect) {
     return ImageManipulation.cropper(
-        ImageManipulation.upscaler(kinect.getDepthImage().get(39, 32, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH*KINECT_HEIGHT)
+        ImageManipulation.upscaler(kinect.getDepthImage().get(16, 13, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH*KINECT_HEIGHT)
     );
   }
 

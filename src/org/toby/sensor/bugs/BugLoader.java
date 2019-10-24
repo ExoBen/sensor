@@ -46,7 +46,7 @@ public class BugLoader implements LoadersInterface {
         currentlyBugging = false;
       }
     } else {
-      int dice = rand.nextInt(4);
+      int dice = rand.nextInt(6);
       switch (dice) {
         case 0:
           currentBug = blackAndWhiteMask;
@@ -61,7 +61,7 @@ public class BugLoader implements LoadersInterface {
           currentBug = downloadedStatic;
       }
       sounds.playSound();
-      currentBugLength = rand.nextInt(200) + 100;
+      currentBugLength = rand.nextInt(200) + 300;
       currentlyBugging = true;
       bugStartTime = System.currentTimeMillis();
       outputImage = executeBug(liveVideo, body, kinect);
