@@ -30,6 +30,15 @@ public class Sensor extends PApplet {
   private Random rand;
   private SoundFile softFuzz;
   private boolean starting;
+  private Integer phase = 0;
+
+  private int phaseOneLength = 35000;
+  //  private int phaseTwoLength = 215000;
+  private int phaseTwoLength = 65000;
+  //  private int phaseThreeLength = 275000;
+  private int phaseThreeLength = 95000;
+//   private int phaseFourLength = 125000;
+  private int phaseFourLength = 125000;
 
   public static void main(String[] args) {
     PApplet.main("org.toby.sensor.Sensor");
@@ -41,7 +50,7 @@ public class Sensor extends PApplet {
 
   public void setup() {
     rand = new Random();
-    base = new BaseLoader();
+    base = new BaseLoader(phase);
     feature = new FeatureLoader(this);
     bug = new BugLoader(this);
     textOverlay = new TextOverlay(this);
@@ -62,12 +71,33 @@ public class Sensor extends PApplet {
         ImageManipulation.upscaler(kinect.getBodyTrackImage().get(16, 13, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH * KINECT_HEIGHT)
     );
     bodies.filter(THRESHOLD);
-    PImage liveVideo = kinect.getColorImage().get(HEIGHT_CUT, 0, SET_WIDTH, SET_HEIGHT);
+    PImage liveVideo = kinect.getColorImage().get(0, HEIGHT_CUT, SET_WIDTH, SET_HEIGHT);
     liveVideo.filter(GRAY);
 
-    boolean shouldBug = rand.nextInt(200) == 0;
-    long timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
-    boolean toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 14000;
+    boolean shouldBug;
+    long timeSinceLastFeature;
+    boolean toFeature;
+
+    if (System.currentTimeMillis() - timeBegin < phaseOneLength) {
+      phase = 1;
+      shouldBug = false;
+      toFeature = false;
+    } else if (System.currentTimeMillis() - timeBegin < phaseTwoLength) {
+      phase = 2;
+      shouldBug = rand.nextInt(200) == 0;
+      timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
+      toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(100) == 0) || timeSinceLastFeature > 14000;
+    } else if (System.currentTimeMillis() - timeBegin < phaseThreeLength) {
+      phase = 3;
+      shouldBug = rand.nextInt(70) == 0;
+      timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
+      toFeature = (timeSinceLastFeature > 4000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 9000;
+    } else {
+      phase = 4;
+      shouldBug = rand.nextInt(40) == 0;
+      timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
+      toFeature = (timeSinceLastFeature > 4000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 7000;
+    }
 
     PImage outputVideo;
     if (starting) {
@@ -87,9 +117,12 @@ public class Sensor extends PApplet {
           outputVideo = bug.execute(outputVideo, bodies, kinect, openCV);
           currentlyBugging = bug.isCurrentlyBugging();
         }
-        image(outputVideo, 0, 0);
+        image(outputVideo, 0, 180);
       } else {
         //basing
+        if (phase < 4) {
+          image(liveVideo, 0, 180);
+        }
         base.execute(liveVideo, bodies, kinect, openCV, this);
       }
       borders();
@@ -136,7 +169,7 @@ public class Sensor extends PApplet {
     kinect.enablePointCloud(true);
     kinect.init();
     kinect.setLowThresholdPC(100);
-    kinect.setHighThresholdPC(2300);
+    kinect.setHighThresholdPC(2700);
   }
 
   public void mousePressed() {

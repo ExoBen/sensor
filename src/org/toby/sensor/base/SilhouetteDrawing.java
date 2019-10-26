@@ -13,10 +13,33 @@ import static org.toby.sensor.UtilitiesAndConstants.SET_HEIGHT;
 
 class SilhouetteDrawing {
 
+  private Integer phase;
+
+  SilhouetteDrawing(Integer phase) {
+    this.phase = phase;
+  }
+
   void execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, PApplet parent) {
-    parent.fill(0, 2);
-    parent.stroke(0);
-    parent.rect(0, HEIGHT_CUT, 1920, SET_HEIGHT);
+    float polygonFactor;
+    switch (phase) {
+      case 1:
+        polygonFactor = 1f;
+        break;
+      case 2:
+        polygonFactor = 3f;
+        break;
+      case 3:
+        polygonFactor = 8f;
+        break;
+      default:
+        polygonFactor = 12f;
+    }
+
+    if (phase > 3) {
+      parent.fill(0, 2);
+      parent.stroke(0);
+      parent.rect(0, HEIGHT_CUT, 1920, SET_HEIGHT);
+    }
 
     parent.noFill();
     parent.strokeWeight(2.5f);
@@ -27,7 +50,6 @@ class SilhouetteDrawing {
 
     ArrayList<Contour> contours = openCV.findContours(false, false);
 
-    float polygonFactor = 10;
     for (Contour contour : contours) {
       contour.setPolygonApproximationFactor(polygonFactor);
       if (contour.numPoints() > 50) {
@@ -35,7 +57,7 @@ class SilhouetteDrawing {
         parent.beginShape();
 
         for (PVector point : contour.getPolygonApproximation().getPoints()) {
-          parent.vertex(point.x*3.4f, point.y*3.4f);
+          parent.vertex(point.x*3.4f+130, point.y*3.4f-90);
         }
         parent.endShape();
       }

@@ -70,9 +70,7 @@ public class FeatureLoader implements LoadersInterface {
       startingPoint = startingPoints[rand.nextInt(4)];
       outputImage = executeFeature(liveVideo, body, kinect);
     }
-    PImage border = new PImage(SET_WIDTH, SET_HEIGHT+HEIGHT_CUT);
-    border.set(0, HEIGHT_CUT, outputImage);
-    return border;
+    return outputImage;
   }
 
   public boolean isCurrentlyFeaturing() {

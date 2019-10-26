@@ -10,8 +10,8 @@ public class BaseLoader {
 
   private SilhouetteDrawing silhouetteDrawing;
 
-  public BaseLoader() {
-    silhouetteDrawing = new SilhouetteDrawing();
+  public BaseLoader(Integer phase) {
+    silhouetteDrawing = new SilhouetteDrawing(phase);
   }
 
   public void execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, PApplet parent) {
