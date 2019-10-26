@@ -1,6 +1,7 @@
 package org.toby.sensor;
 
 import KinectPV2.*;
+import animation.Intro;
 import gab.opencv.*;
 import org.toby.sensor.base.BaseLoader;
 import org.toby.sensor.bugs.BugLoader;
@@ -8,6 +9,7 @@ import org.toby.sensor.features.FeatureLoader;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.sound.*;
+import processing.video.*;
 
 import java.util.Random;
 
@@ -22,6 +24,7 @@ public class Sensor extends PApplet {
   private boolean currentlyBugging = false;
 
   private TextOverlay textOverlay;
+  private Intro intro;
   private KinectPV2 kinect;
   private OpenCV openCV;
   private long timeBegin;
@@ -32,13 +35,13 @@ public class Sensor extends PApplet {
   private boolean starting;
   private Integer phase = 0;
 
-  private int phaseOneLength = 35000;
-  //  private int phaseTwoLength = 215000;
-  private int phaseTwoLength = 65000;
-  //  private int phaseThreeLength = 275000;
-  private int phaseThreeLength = 95000;
-//   private int phaseFourLength = 125000;
-  private int phaseFourLength = 125000;
+  private boolean inIntro = true;
+  private boolean inOutro = false;
+
+  private int PHASE_ONE_LENGTH = 35000;
+  private int PHASE_TWO_LENGTH = 65000;
+  private int PHASE_THREE_LENGTH = 95000;
+  private int PHASE_FOUR_LENGTH = 125000;
 
   public static void main(String[] args) {
     PApplet.main("org.toby.sensor.Sensor");
@@ -57,6 +60,7 @@ public class Sensor extends PApplet {
     timeBegin = System.currentTimeMillis();
     timeOfLastFeature = timeBegin;
     openCV = new OpenCV(this, 512, 424);
+    intro = new Intro(this);
     setUpKinect(this);
     setUpSounds();
     textFont(createFont("F:/SkyDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
@@ -66,6 +70,15 @@ public class Sensor extends PApplet {
   // -------------------------------------------------------------------------------------------------------------------
 
   public void draw() {
+    if (inIntro) {
+      PImage introImage = intro.playIntro();
+      inIntro = !intro.isIntroComplete();
+      image(introImage, 0, 0);
+      return;
+    } else if (inOutro) {
+      return;
+    }
+
     long currentTime = System.currentTimeMillis() - timeBegin;
     PImage bodies = ImageManipulation.cropper(
         ImageManipulation.upscaler(kinect.getBodyTrackImage().get(16, 13, KINECT_WIDTH, KINECT_HEIGHT), KINECT_WIDTH * KINECT_HEIGHT)
@@ -78,16 +91,16 @@ public class Sensor extends PApplet {
     long timeSinceLastFeature;
     boolean toFeature;
 
-    if (System.currentTimeMillis() - timeBegin < phaseOneLength) {
+    if (System.currentTimeMillis() - timeBegin < PHASE_ONE_LENGTH) {
       phase = 1;
       shouldBug = false;
       toFeature = false;
-    } else if (System.currentTimeMillis() - timeBegin < phaseTwoLength) {
+    } else if (System.currentTimeMillis() - timeBegin < PHASE_TWO_LENGTH) {
       phase = 2;
       shouldBug = rand.nextInt(200) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
       toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(100) == 0) || timeSinceLastFeature > 14000;
-    } else if (System.currentTimeMillis() - timeBegin < phaseThreeLength) {
+    } else if (System.currentTimeMillis() - timeBegin < PHASE_THREE_LENGTH) {
       phase = 3;
       shouldBug = rand.nextInt(70) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
@@ -151,7 +164,6 @@ public class Sensor extends PApplet {
       softFuzz.stop();
     }
   }
-
 
   private void borders() {
     this.fill(0);

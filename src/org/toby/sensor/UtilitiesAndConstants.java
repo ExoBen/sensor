@@ -40,4 +40,13 @@ public class UtilitiesAndConstants {
     return statics;
   }
 
+  public static ArrayList<PImage> loadIntros(PApplet parent) {
+    ArrayList<PImage> statics = new ArrayList<>();
+    for (int i = 0; i <= 25; i++) {
+      String boots = "F:/SkyDrive/Work/NEoN/sensor/resources/boot/" + i + ".png";
+      statics.add(parent.loadImage(boots));
+    }
+    return statics;
+  }
+
 }
