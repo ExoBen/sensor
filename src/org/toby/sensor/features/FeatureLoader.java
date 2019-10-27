@@ -57,7 +57,7 @@ public class FeatureLoader implements LoadersInterface {
       }
       frame++;
     } else {
-      int dice = rand.nextInt(10);
+      int dice = rand.nextInt(3);
       switch (dice) {
         case 0:
           currentFeature = depthImage;
