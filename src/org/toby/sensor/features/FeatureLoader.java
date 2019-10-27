@@ -8,7 +8,6 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static org.toby.sensor.UtilitiesAndConstants.*;
@@ -18,11 +17,13 @@ public class FeatureLoader implements LoadersInterface {
   private PApplet parent;
   private FeatureSounds sounds;
   private Random rand;
+
   private AbstractFeature currentFeature;
 
   // features
   private DepthImage depthImage;
   private BlackAndWhiteStatic blackAndWhiteStatic;
+  private SkeletonFeature skeletonFeature;
 
   private boolean currentlyFeaturing;
   private long featureStartTime;
@@ -38,6 +39,7 @@ public class FeatureLoader implements LoadersInterface {
     rand = new Random();
     depthImage = new DepthImage();
     blackAndWhiteStatic = new BlackAndWhiteStatic();
+    skeletonFeature = new SkeletonFeature(p);
     statics = loadStatics(p);
   }
 
@@ -55,13 +57,16 @@ public class FeatureLoader implements LoadersInterface {
       }
       frame++;
     } else {
-      int dice = rand.nextInt(2);
+      int dice = rand.nextInt(10);
       switch (dice) {
         case 0:
           currentFeature = depthImage;
           break;
-        default:
+        case 1:
           currentFeature = blackAndWhiteStatic;
+          break;
+        default:
+          currentFeature = skeletonFeature;
       }
       sounds.playSound();
       currentlyFeaturing = true;
@@ -75,6 +80,10 @@ public class FeatureLoader implements LoadersInterface {
 
   public boolean isCurrentlyFeaturing() {
     return currentlyFeaturing;
+  }
+
+  public Class getCurrentFeature() {
+    return currentFeature.getClass();
   }
 
   private PImage executeFeature(PImage liveVideo, PImage body, KinectPV2 kinect) {

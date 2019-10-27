@@ -1,4 +1,4 @@
-package animation;
+package org.toby.sensor.animation;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -12,7 +12,6 @@ public class Intro {
   private ArrayList<PImage> introImages;
   private int currentImage = 0;
   private long timeOfLast;
-
   private boolean introComplete = false;
 
   public Intro(PApplet parent) {
@@ -24,7 +23,7 @@ public class Intro {
     long now = System.currentTimeMillis();
     if (currentImage == 0 || currentImage == 1) {
       // time of loading
-      if (now - timeOfLast > 5000) {
+      if (now - timeOfLast > 3000) {
         currentImage = 2;
         timeOfLast = now;
       } else if ((now - timeOfLast)/700 % 2 == 1) { // time of flash
@@ -49,6 +48,18 @@ public class Intro {
       introComplete = true;
     }
     return introImages.get(currentImage);
+  }
+
+  public void setTimeOfLast(long timeOfLast) {
+    this.timeOfLast = timeOfLast;
+  }
+
+  public void resetCurrentImage() {
+    this.currentImage = 0;
+  }
+
+  public void setIntroComplete(boolean introComplete) {
+    this.introComplete = introComplete;
   }
 
   public boolean isIntroComplete() {
