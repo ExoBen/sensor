@@ -43,12 +43,12 @@ public class Sensor extends PApplet {
   private boolean inOutro = false;
   private long outroStartTime;
 
-  private static final int PHASE_ONE_LENGTH = 30000; // 30000
-  private static final int PHASE_TWO_LENGTH = 20000; // 20000
-  private static final int PHASE_THREE_LENGTH = 20000; // 20000
-  private static final int PHASE_FOUR_LENGTH = 120000; // 120000
-  private static final int PHASE_FIVE_LENGTH = 60000; // 60000
-  private static final int PHASE_SIX_LENGTH = 15000; // 15000
+  private static final int PHASE_ONE_LENGTH = 3000; // 30000
+  private static final int PHASE_TWO_LENGTH = 2000; // 20000
+  private static final int PHASE_THREE_LENGTH = 2000; // 20000
+  private static final int PHASE_FOUR_LENGTH = 12000; // 120000
+  private static final int PHASE_FIVE_LENGTH = 6000; // 60000
+  private static final int PHASE_SIX_LENGTH = 1500; // 15000
   private static final int FREEZE_LENGTH = 5000; // 5000
   private static final int BLUE_LENGTH = 10000; // 10000
   private static final int BLACK_LENGTH = 10000; // 10000
@@ -88,14 +88,16 @@ public class Sensor extends PApplet {
         intro.setTimeOfLast(System.currentTimeMillis());
       }
       if (!seen) {
-        image(standbys.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0,0);
+        image(standbys.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0, HEIGHT_CUT);
+        borders();
       } else {
         PImage introImage = intro.playIntro();
         inIntro = !intro.isIntroComplete();
         if (!inIntro) {
           introEndTime = System.currentTimeMillis();
         }
-        image(introImage, 0, 0);
+        image(introImage, 0, HEIGHT_CUT);
+        borders();
       }
       return;
     } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLACK_LENGTH + BLUE_LENGTH + FREEZE_LENGTH) {
@@ -106,7 +108,8 @@ public class Sensor extends PApplet {
       background(0);
       return;
     } else if (inOutro && System.currentTimeMillis() - outroStartTime > FREEZE_LENGTH) {
-      image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0,0);
+      image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0,HEIGHT_CUT);
+      borders();
       return;
     } else if (inOutro) {
       return;
