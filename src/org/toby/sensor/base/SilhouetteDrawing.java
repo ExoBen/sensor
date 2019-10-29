@@ -75,7 +75,17 @@ public class SilhouetteDrawing {
         parent.beginShape();
 
         for (PVector point : contour.getPolygonApproximation().getPoints()) {
-          parent.vertex(point.x*3.4f+130, point.y*3.4f-90);
+          float q1 = 0;
+          float q2 = 0;
+          float convertedX = point.x*4f;
+          float convertedY = point.y*3.5f-60;
+          if (convertedX > 800) {
+            q1 = (800 - convertedX)/4f;
+          } else {
+            q1 = (800 - convertedX)/3.6f;
+          }
+          q2 = -(convertedY)/7;
+          parent.vertex(convertedX + q1, convertedY + q2);
         }
         parent.endShape();
       }

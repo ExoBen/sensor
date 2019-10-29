@@ -41,7 +41,7 @@ class TextOverlay {
 
   void displayBodyCountOverlay(int bodies, int phase) {
     parent.textSize(48); // medium text
-    parent.fill(0, 200, 255); //cyan
+    parent.fill(255); // white
     parent.text(bodies, SET_WIDTH-70, HEIGHT_CUT+70);
     parent.text(phase, SET_WIDTH-70, HEIGHT_CUT+140);
   }
