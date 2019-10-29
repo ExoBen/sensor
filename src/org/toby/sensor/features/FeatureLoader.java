@@ -32,7 +32,6 @@ public class FeatureLoader implements LoadersInterface {
   private Integer[] startingPoints = new Integer[] {0,3,6,9};
   private Integer startingPoint;
 
-
   public FeatureLoader(PApplet p) {
     parent = p;
     sounds = new FeatureSounds(p);

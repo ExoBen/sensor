@@ -23,7 +23,7 @@ public class Intro {
     long now = System.currentTimeMillis();
     if (currentImage == 0 || currentImage == 1) {
       // time of loading
-      if (now - timeOfLast > 3000) {
+      if (now - timeOfLast > 2500) {
         currentImage = 2;
         timeOfLast = now;
       } else if ((now - timeOfLast)/700 % 2 == 1) { // time of flash

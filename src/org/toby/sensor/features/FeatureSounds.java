@@ -16,7 +16,7 @@ class FeatureSounds implements SoundsInterface {
   }
 
   private void loadSounds() {
-    String clickBuzzSound = "F:/SkyDrive/Work/NEoN/sensor/resources/audio/feature1.wav";
+    String clickBuzzSound = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/audio/feature1.wav";
     feature1 = new SoundFile(parent, clickBuzzSound);
     feature1.amp(0.3f);
   }

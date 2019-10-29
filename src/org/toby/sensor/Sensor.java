@@ -3,7 +3,7 @@ package org.toby.sensor;
 import KinectPV2.*;
 import org.toby.sensor.animation.Intro;
 import gab.opencv.*;
-import org.toby.sensor.base.BaseLoader;
+import org.toby.sensor.base.SilhouetteDrawing;
 import org.toby.sensor.bugs.BugLoader;
 import org.toby.sensor.features.FeatureLoader;
 import org.toby.sensor.features.instances.SkeletonFeature;
@@ -18,7 +18,7 @@ import static org.toby.sensor.UtilitiesAndConstants.*;
 
 public class Sensor extends PApplet {
 
-  private BaseLoader base;
+  private SilhouetteDrawing silhouette;
   private FeatureLoader feature;
   private boolean currentlyFeaturing = false;
   private BugLoader bug;
@@ -34,7 +34,7 @@ public class Sensor extends PApplet {
 
   private Random rand;
   private SoundFile softFuzz;
-  private Integer phase = 0;
+  private Integer phase;
 
   private ArrayList<PImage> standbys;
   private ArrayList<PImage> blues;
@@ -43,12 +43,15 @@ public class Sensor extends PApplet {
   private boolean inOutro = false;
   private long outroStartTime;
 
-  private static final int PHASE_ONE_LENGTH = 10000;
-  private static final int PHASE_TWO_LENGTH = 10000;
-  private static final int PHASE_THREE_LENGTH = 10000;
-  private static final int PHASE_FOUR_LENGTH = 10000;
-  private static final int BLUE_LENGTH = 5000;
-  private static final int BLACK_LENGTH = 5000;
+  private static final int PHASE_ONE_LENGTH = 30000; // 30000
+  private static final int PHASE_TWO_LENGTH = 20000; // 20000
+  private static final int PHASE_THREE_LENGTH = 20000; // 20000
+  private static final int PHASE_FOUR_LENGTH = 120000; // 120000
+  private static final int PHASE_FIVE_LENGTH = 60000; // 60000
+  private static final int PHASE_SIX_LENGTH = 15000; // 15000
+  private static final int FREEZE_LENGTH = 5000; // 5000
+  private static final int BLUE_LENGTH = 10000; // 10000
+  private static final int BLACK_LENGTH = 10000; // 10000
 
   public static void main(String[] args) {
     PApplet.main("org.toby.sensor.Sensor");
@@ -60,7 +63,7 @@ public class Sensor extends PApplet {
 
   public void setup() {
     rand = new Random();
-    base = new BaseLoader(phase);
+    silhouette = new SilhouetteDrawing();
     feature = new FeatureLoader(this);
     bug = new BugLoader(this);
     textOverlay = new TextOverlay(this);
@@ -72,7 +75,7 @@ public class Sensor extends PApplet {
     blues = loadBlues(this);
     setUpKinect(this);
     setUpSounds();
-    textFont(createFont("F:/SkyDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
+    textFont(createFont("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
     background(0);
   }
 
@@ -95,15 +98,17 @@ public class Sensor extends PApplet {
         image(introImage, 0, 0);
       }
       return;
-    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLACK_LENGTH + BLUE_LENGTH) {
+    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLACK_LENGTH + BLUE_LENGTH + FREEZE_LENGTH) {
       background(0);
       reset();
       return;
-    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLUE_LENGTH) {
+    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLUE_LENGTH + FREEZE_LENGTH) {
       background(0);
       return;
-    } else if (inOutro) {
+    } else if (inOutro && System.currentTimeMillis() - outroStartTime > FREEZE_LENGTH) {
       image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0,0);
+      return;
+    } else if (inOutro) {
       return;
     }
 
@@ -127,17 +132,27 @@ public class Sensor extends PApplet {
       phase = 2;
       shouldBug = rand.nextInt(200) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
-      toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(100) == 0) || timeSinceLastFeature > 14000;
+      toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 15000;
     } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH) {
       phase = 3;
-      shouldBug = rand.nextInt(70) == 0;
+      shouldBug = rand.nextInt(100) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
-      toFeature = (timeSinceLastFeature > 4000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 9000;
+      toFeature = (timeSinceLastFeature > 5000 && rand.nextInt(150) == 0) || timeSinceLastFeature > 10000;
     } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH) {
       phase = 4;
-      shouldBug = rand.nextInt(40) == 0;
+      shouldBug = rand.nextInt(200) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
-      toFeature = (timeSinceLastFeature > 2500 && rand.nextInt(250) == 0) || timeSinceLastFeature > 7000;
+      toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 15000;
+    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH) {
+      phase = 5;
+      shouldBug = rand.nextInt(100) == 0;
+      timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
+      toFeature = (timeSinceLastFeature > 5000 && rand.nextInt(150) == 0) || timeSinceLastFeature > 10000;
+    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH + PHASE_SIX_LENGTH) {
+      phase = 6;
+      shouldBug = rand.nextInt(20) == 0;
+      timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
+      toFeature = (timeSinceLastFeature > 1000 && rand.nextInt(100) == 0) || timeSinceLastFeature > 3000;
     } else {
       inOutro = true;
       outroStartTime = System.currentTimeMillis();
@@ -166,9 +181,9 @@ public class Sensor extends PApplet {
       if (phase < 4) {
         image(liveVideo, 0, 180);
       }
-      base.execute(liveVideo, bodies, kinect, openCV, this);
+      silhouette.execute(kinect, openCV, phase, this);
     }
-    textOverlay.displayBodyCountOverlay(kinect.getBodyTrackUser().size());
+    textOverlay.displayBodyCountOverlay(kinect.getBodyTrackUser().size(), phase);
     if (!currentlyFeaturing && !currentlyBugging) {
       textOverlay.addFaceText(kinect);
     }
@@ -179,7 +194,7 @@ public class Sensor extends PApplet {
   // -------------------------------------------------------------------------------------------------------------------
 
   private void setUpSounds() {
-    String softFuzzSound = "F:/SkyDrive/Work/NEoN/sensor/resources/audio/vhs.wav";
+    String softFuzzSound = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/audio/vhs.wav";
     softFuzz = new SoundFile(this, softFuzzSound);
     softFuzz.loop();
     softFuzz.amp(0.2f); //volume
@@ -214,20 +229,20 @@ public class Sensor extends PApplet {
     kinect.enableSkeletonDepthMap(true);
     kinect.init();
     kinect.setLowThresholdPC(100);
-    kinect.setHighThresholdPC(2700);
+    kinect.setHighThresholdPC(3500);
   }
 
   private ArrayList<PImage> loadStandby(PApplet parent) {
     ArrayList<PImage> standbys = new ArrayList<>();
-    standbys.add(parent.loadImage("F:/SkyDrive/Work/NEoN/sensor/resources/boot/standby1.png"));
-    standbys.add(parent.loadImage("F:/SkyDrive/Work/NEoN/sensor/resources/boot/standby2.png"));
+    standbys.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/standby1.png"));
+    standbys.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/standby2.png"));
     return standbys;
   }
 
   private ArrayList<PImage> loadBlues(PApplet parent) {
     ArrayList<PImage> blues = new ArrayList<>();
-    blues.add(parent.loadImage("F:/SkyDrive/Work/NEoN/sensor/resources/outro/blue1.png"));
-    blues.add(parent.loadImage("F:/SkyDrive/Work/NEoN/sensor/resources/outro/blue2.png"));
+    blues.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/outro/blue1.png"));
+    blues.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/outro/blue2.png"));
     return blues;
   }
 

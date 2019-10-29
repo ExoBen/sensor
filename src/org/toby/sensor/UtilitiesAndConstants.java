@@ -34,7 +34,7 @@ public class UtilitiesAndConstants {
   public static ArrayList<PImage> loadStatics(PApplet parent) {
     ArrayList<PImage> statics = new ArrayList<>();
     for (int i = 1; i <= 30; i++) {
-      String background = "F:/SkyDrive/Work/NEoN/sensor/resources/imagesOfStatic/static" + i + ".png";
+      String background = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/imagesOfStatic/static" + i + ".png";
       statics.add(parent.loadImage(background));
     }
     return statics;
@@ -43,7 +43,7 @@ public class UtilitiesAndConstants {
   public static ArrayList<PImage> loadIntros(PApplet parent) {
     ArrayList<PImage> statics = new ArrayList<>();
     for (int i = 0; i <= 25; i++) {
-      String boots = "F:/SkyDrive/Work/NEoN/sensor/resources/boot/" + i + ".png";
+      String boots = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/" + i + ".png";
       statics.add(parent.loadImage(boots));
     }
     return statics;

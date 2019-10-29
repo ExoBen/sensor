@@ -3,41 +3,54 @@ package org.toby.sensor.base;
 import KinectPV2.KinectPV2;
 import gab.opencv.*;
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PVector;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.toby.sensor.UtilitiesAndConstants.HEIGHT_CUT;
 import static org.toby.sensor.UtilitiesAndConstants.SET_HEIGHT;
 
-class SilhouetteDrawing {
+public class SilhouetteDrawing {
 
-  private Integer phase;
+  Random rand;
+  boolean goldenTicket;
 
-  SilhouetteDrawing(Integer phase) {
-    this.phase = phase;
+  public SilhouetteDrawing() {
+    rand = new Random();
   }
 
-  void execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, PApplet parent) {
+  public void execute(KinectPV2 kinect, OpenCV openCV, int phase, PApplet parent) {
     float polygonFactor;
     switch (phase) {
       case 1:
-        polygonFactor = 1f;
+        polygonFactor = 1.2f;
         break;
       case 2:
         polygonFactor = 3f;
         break;
       case 3:
-        polygonFactor = 8f;
+        polygonFactor = 5f;
         break;
       default:
         polygonFactor = 12f;
     }
 
+    boolean wasGolden = goldenTicket;
+    int changeOfAFlashHappening = 15;
+    goldenTicket = (phase == 6 && rand.nextInt(changeOfAFlashHappening) == 1);
+
     if (phase > 3) {
-      parent.fill(0, 2);
-      parent.stroke(0);
+      if (goldenTicket) {
+        parent.fill(180, 240);
+        parent.stroke(180);
+      } else if (wasGolden) {
+        parent.fill(0, 250);
+        parent.stroke(0);
+       }else {
+        parent.fill(0, 2);
+        parent.stroke(0);
+      }
       parent.rect(0, HEIGHT_CUT, 1920, SET_HEIGHT);
     }
 
@@ -53,6 +66,11 @@ class SilhouetteDrawing {
     for (Contour contour : contours) {
       contour.setPolygonApproximationFactor(polygonFactor);
       if (contour.numPoints() > 50) {
+        if (goldenTicket) {
+          parent.stroke(0, 200);
+        } else {
+          parent.stroke(255, 200);
+        }
         parent.stroke(255, 200);
         parent.beginShape();
 

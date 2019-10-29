@@ -33,15 +33,17 @@ class TextOverlay {
     if ((int)floor(currentTime/1000) % 2 == 0) {
       parent.fill(255, 0, 0); // red
       parent.stroke(255, 0, 0); // red
+      parent.strokeWeight(1f);
       parent.rect(150, HEIGHT_CUT+39, 16, 24);
       parent.rect(146, HEIGHT_CUT+43, 24, 16);
     }
   }
 
-  void displayBodyCountOverlay(int bodies) {
+  void displayBodyCountOverlay(int bodies, int phase) {
     parent.textSize(48); // medium text
-    parent.fill(255); //white
+    parent.fill(0, 200, 255); //cyan
     parent.text(bodies, SET_WIDTH-70, HEIGHT_CUT+70);
+    parent.text(phase, SET_WIDTH-70, HEIGHT_CUT+140);
   }
 
   void addFaceText(KinectPV2 kinect) {
