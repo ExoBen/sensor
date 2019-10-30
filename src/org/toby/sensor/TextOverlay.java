@@ -77,27 +77,34 @@ class TextOverlay {
       float headY = head.getY() * 3.56f;
       parent.textSize(16); // medium text
 
-      ArrayList<String> stat = stats.get(k);
-
-      int classText = Integer.valueOf(stat.get(0));
-      int deception = Integer.valueOf(stat.get(1)) + rand.nextInt(5) - 2;
-      int opChange = 0;
-      if (rand.nextInt(10) == 0) {
-        opChange = 1;
+      if (k+1 > stats.size()) {
+        break;
       }
-      int opposition = Integer.valueOf(stat.get(2)) + opChange;
-      int convChange = 0;
-      if (rand.nextInt(5) == 0) {
-        convChange = -1;
-      }
-      int convergence = Integer.valueOf(stat.get(3)) + convChange;
+      try {
+        ArrayList<String> stat = stats.get(k);
 
-      parent.text(
-        "Class: " + classText + "\n" +
-          "Deception: " + deception + "%\n" +
-          "Opposition: " + opposition + "%\n" +
-          "Convergence: " + convergence + "%",
-        headX + (1950 - headX) / 9, headY - 250);
+        int classText = Integer.valueOf(stat.get(0));
+        int deception = Integer.valueOf(stat.get(1)) + rand.nextInt(5) - 2;
+        int opChange = 0;
+        if (rand.nextInt(10) == 0) {
+          opChange = 1;
+        }
+        int opposition = Integer.valueOf(stat.get(2)) + opChange;
+        int convChange = 0;
+        if (rand.nextInt(5) == 0) {
+          convChange = -1;
+        }
+        int convergence = Integer.valueOf(stat.get(3)) + convChange;
+
+        parent.text(
+          "Class: " + classText + "\n" +
+            "Deception: " + deception + "%\n" +
+            "Opposition: " + opposition + "%\n" +
+            "Convergence: " + convergence + "%",
+          headX + (1950 - headX) / 9, headY - 250);
+      } catch (Exception e) {
+        break;
+      }
     }
   }
 

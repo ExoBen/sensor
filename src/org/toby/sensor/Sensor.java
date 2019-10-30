@@ -38,6 +38,8 @@ public class Sensor extends PApplet {
 
   private ArrayList<PImage> standbys;
   private ArrayList<PImage> blues;
+  private ArrayList<PImage> glitches;
+  private int theChosenGlitch;
   private boolean seen = false;
   private boolean inIntro = true;
   private boolean inOutro = false;
@@ -73,6 +75,8 @@ public class Sensor extends PApplet {
     intro = new Intro(this);
     standbys = loadStandby(this);
     blues = loadBlues(this);
+    glitches = loadGlitches(this);
+    theChosenGlitch = rand.nextInt(10);
     setUpKinect(this);
     setUpSounds();
     textFont(createFont("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
@@ -109,11 +113,12 @@ public class Sensor extends PApplet {
       background(0);
       return;
     } else if (inOutro && System.currentTimeMillis() - outroStartTime > FREEZE_LENGTH) {
-      image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0,HEIGHT_CUT);
+      image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0, HEIGHT_CUT);
       borders();
       return;
     } else if (inOutro) {
       stopFuzz();
+      image(glitches.get(theChosenGlitch),0, HEIGHT_CUT);
       return;
     }
 
@@ -250,6 +255,14 @@ public class Sensor extends PApplet {
     return blues;
   }
 
+  private ArrayList<PImage> loadGlitches(PApplet parent) {
+    ArrayList<PImage> glitches = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      glitches.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/glitch/glitch"+i+".jpg"));
+    }
+    return glitches;
+  }
+
   private void reset() {
     inIntro = true;
     inOutro = false;
@@ -257,6 +270,7 @@ public class Sensor extends PApplet {
     intro.resetCurrentImage();
     intro.setIntroComplete(false);
     timeBegin = System.currentTimeMillis();
+    theChosenGlitch = rand.nextInt(10);
   }
 
   public void mousePressed() {
