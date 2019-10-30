@@ -33,7 +33,7 @@ public class SilhouetteDrawing {
         polygonFactor = 5f;
         break;
       default:
-        polygonFactor = 12f;
+        polygonFactor = 8f;
     }
 
     boolean wasGolden = goldenTicket;

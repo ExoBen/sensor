@@ -95,6 +95,7 @@ public class Sensor extends PApplet {
         inIntro = !intro.isIntroComplete();
         if (!inIntro) {
           introEndTime = System.currentTimeMillis();
+          startFuzz();
         }
         image(introImage, 0, HEIGHT_CUT);
         borders();
@@ -112,6 +113,7 @@ public class Sensor extends PApplet {
       borders();
       return;
     } else if (inOutro) {
+      stopFuzz();
       return;
     }
 
@@ -162,7 +164,6 @@ public class Sensor extends PApplet {
       return;
     }
     PImage outputVideo;
-    startFuzz();
     if (toFeature || currentlyFeaturing || shouldBug || currentlyBugging) {
       outputVideo = liveVideo;
       if (toFeature || currentlyFeaturing) {
@@ -232,7 +233,7 @@ public class Sensor extends PApplet {
     kinect.enableSkeletonDepthMap(true);
     kinect.init();
     kinect.setLowThresholdPC(100);
-    kinect.setHighThresholdPC(3500);
+    kinect.setHighThresholdPC(4000);
   }
 
   private ArrayList<PImage> loadStandby(PApplet parent) {
