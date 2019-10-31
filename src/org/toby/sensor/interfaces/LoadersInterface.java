@@ -5,5 +5,5 @@ import gab.opencv.OpenCV;
 import processing.core.PImage;
 
 public interface LoadersInterface {
-  PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV);
+  PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, int phase);
 }

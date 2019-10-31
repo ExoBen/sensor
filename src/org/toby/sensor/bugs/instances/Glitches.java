@@ -7,23 +7,23 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-import static org.toby.sensor.ImageLoader.loadStatics;
+import static org.toby.sensor.ImageLoader.loadGlitches;
 
-public class LongDownloadedStatic extends AbstractBug {
+public class Glitches extends AbstractBug {
 
-  private ArrayList<PImage> statics;
+  private ArrayList<PImage> glitches;
   private int frame = 0;
 
-  public LongDownloadedStatic(PApplet p) {
-    statics = loadStatics(p);
+  public Glitches(PApplet p) {
+    glitches = loadGlitches(p);
   }
 
   public PImage executeBug(PImage liveVideo, PImage body, KinectPV2 kinect) {
     frame++;
-    if (frame%25 == 0) {
+    if (frame%10 == 0) {
       frame = 0;
     }
-    return statics.get(frame);
+    return glitches.get(frame);
   }
 
 }

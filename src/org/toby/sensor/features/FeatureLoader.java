@@ -10,7 +10,7 @@ import processing.core.PImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.toby.sensor.UtilitiesAndConstants.*;
+import static org.toby.sensor.ImageLoader.loadStatics;
 
 public class FeatureLoader implements LoadersInterface {
 
@@ -42,7 +42,7 @@ public class FeatureLoader implements LoadersInterface {
     statics = loadStatics(p);
   }
 
-  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
+  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, int phase) {
     PImage outputImage;
     if (currentFeature != null) {
       if (frame < 20) {
@@ -56,7 +56,12 @@ public class FeatureLoader implements LoadersInterface {
       }
       frame++;
     } else {
-      int dice = rand.nextInt(3);
+      int dice;
+      if (phase == 6) {
+        dice = rand.nextInt(2);
+      } else {
+        dice = rand.nextInt(3);
+      }
       switch (dice) {
         case 0:
           currentFeature = depthImage;

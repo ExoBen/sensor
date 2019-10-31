@@ -1,9 +1,6 @@
 package org.toby.sensor;
 
-import processing.core.PApplet;
 import processing.core.PImage;
-
-import java.util.ArrayList;
 
 public class UtilitiesAndConstants {
 
@@ -29,24 +26,6 @@ public class UtilitiesAndConstants {
       }
     }
     return mask;
-  }
-
-  public static ArrayList<PImage> loadStatics(PApplet parent) {
-    ArrayList<PImage> statics = new ArrayList<>();
-    for (int i = 1; i <= 30; i++) {
-      String background = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/imagesOfStatic/static" + i + ".png";
-      statics.add(parent.loadImage(background));
-    }
-    return statics;
-  }
-
-  public static ArrayList<PImage> loadIntros(PApplet parent) {
-    ArrayList<PImage> statics = new ArrayList<>();
-    for (int i = 0; i <= 25; i++) {
-      String boots = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/" + i + ".png";
-      statics.add(parent.loadImage(boots));
-    }
-    return statics;
   }
 
 }

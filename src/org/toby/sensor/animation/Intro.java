@@ -5,7 +5,7 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-import static org.toby.sensor.UtilitiesAndConstants.loadIntros;
+import static org.toby.sensor.ImageLoader.loadIntros;
 
 public class Intro {
 

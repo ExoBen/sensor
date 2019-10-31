@@ -14,6 +14,7 @@ import processing.sound.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.toby.sensor.ImageLoader.*;
 import static org.toby.sensor.UtilitiesAndConstants.*;
 
 public class Sensor extends PApplet {
@@ -45,15 +46,15 @@ public class Sensor extends PApplet {
   private boolean inOutro = false;
   private long outroStartTime;
 
-  private static final int PHASE_ONE_LENGTH = 30000; // 30000
-  private static final int PHASE_TWO_LENGTH = 20000; // 20000
-  private static final int PHASE_THREE_LENGTH = 20000; // 20000
-  private static final int PHASE_FOUR_LENGTH = 120000; // 120000
-  private static final int PHASE_FIVE_LENGTH = 60000; // 60000
-  private static final int PHASE_SIX_LENGTH = 15000; // 15000
-  private static final int FREEZE_LENGTH = 5000; // 5000
-  private static final int BLUE_LENGTH = 10000; // 10000
-  private static final int BLACK_LENGTH = 10000; // 10000
+  private static final int PHASE_ONE_LENGTH = 30000; // 30 seconds
+  private static final int PHASE_TWO_LENGTH = 20000; // 20 seconds
+  private static final int PHASE_THREE_LENGTH = 20000; // 20 seconds
+  private static final int PHASE_FOUR_LENGTH = 120000; // 120 seconds
+  private static final int PHASE_FIVE_LENGTH = 60000; // 60 seconds
+  private static final int PHASE_SIX_LENGTH = 15000; // 15 seconds
+  private static final int FREEZE_LENGTH = 2000; // 2 seconds
+  private static final int BLUE_LENGTH = 10000; // 10 seconds
+  private static final int BLACK_LENGTH = 10000; // 10 seconds
 
   public static void main(String[] args) {
     PApplet.main("org.toby.sensor.Sensor");
@@ -105,21 +106,24 @@ public class Sensor extends PApplet {
         borders();
       }
       return;
-    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLACK_LENGTH + BLUE_LENGTH + FREEZE_LENGTH) {
-      background(0);
-      reset();
-      return;
-    } else if (inOutro && System.currentTimeMillis() - outroStartTime > BLUE_LENGTH + FREEZE_LENGTH) {
-      background(0);
-      return;
-    } else if (inOutro && System.currentTimeMillis() - outroStartTime > FREEZE_LENGTH) {
-      image(blues.get((int) abs(System.currentTimeMillis() - timeBegin )/700 % 2), 0, HEIGHT_CUT);
-      borders();
-      return;
     } else if (inOutro) {
-      stopFuzz();
-      image(glitches.get(theChosenGlitch),0, HEIGHT_CUT);
-      return;
+      long timeSinceOutroStart = System.currentTimeMillis() - outroStartTime;
+      if (timeSinceOutroStart > BLACK_LENGTH + BLUE_LENGTH + FREEZE_LENGTH) {
+        background(0);
+        reset();
+        return;
+      } else if (timeSinceOutroStart > BLUE_LENGTH + FREEZE_LENGTH) {
+        background(0);
+        return;
+      } else if (timeSinceOutroStart > FREEZE_LENGTH) {
+        image(blues.get((int) abs(System.currentTimeMillis() - timeBegin) / 700 % 2), 0, HEIGHT_CUT);
+        borders();
+        return;
+      } else {
+        stopFuzz();
+        image(glitches.get(theChosenGlitch), 0, HEIGHT_CUT);
+        return;
+      }
     }
 
     long currentTime = System.currentTimeMillis() - timeBegin;
@@ -133,32 +137,34 @@ public class Sensor extends PApplet {
     boolean shouldBug;
     long timeSinceLastFeature;
     boolean toFeature;
+    
+    long timeSinceIntroEnd = System.currentTimeMillis() - introEndTime;
 
-    if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH) {
+    if (timeSinceIntroEnd < PHASE_ONE_LENGTH) {
       phase = 1;
       shouldBug = false;
       toFeature = false;
-    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH) {
+    } else if (timeSinceIntroEnd < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH) {
       phase = 2;
       shouldBug = rand.nextInt(200) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
       toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 15000;
-    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH) {
+    } else if (timeSinceIntroEnd < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH) {
       phase = 3;
       shouldBug = rand.nextInt(100) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
       toFeature = (timeSinceLastFeature > 5000 && rand.nextInt(150) == 0) || timeSinceLastFeature > 10000;
-    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH) {
+    } else if (timeSinceIntroEnd < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH) {
       phase = 4;
       shouldBug = rand.nextInt(200) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
       toFeature = (timeSinceLastFeature > 10000 && rand.nextInt(250) == 0) || timeSinceLastFeature > 15000;
-    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH) {
+    } else if (timeSinceIntroEnd < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH) {
       phase = 5;
       shouldBug = rand.nextInt(100) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
       toFeature = (timeSinceLastFeature > 5000 && rand.nextInt(150) == 0) || timeSinceLastFeature > 10000;
-    } else if (System.currentTimeMillis() - introEndTime < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH + PHASE_SIX_LENGTH) {
+    } else if (timeSinceIntroEnd < PHASE_ONE_LENGTH + PHASE_TWO_LENGTH + PHASE_THREE_LENGTH + PHASE_FOUR_LENGTH + PHASE_FIVE_LENGTH + PHASE_SIX_LENGTH) {
       phase = 6;
       shouldBug = rand.nextInt(20) == 0;
       timeSinceLastFeature = System.currentTimeMillis() - timeOfLastFeature;
@@ -173,13 +179,13 @@ public class Sensor extends PApplet {
       outputVideo = liveVideo;
       if (toFeature || currentlyFeaturing) {
         //featuring
-        outputVideo = feature.execute(liveVideo, bodies, kinect, openCV);
+        outputVideo = feature.execute(liveVideo, bodies, kinect, openCV, phase);
         currentlyFeaturing = feature.isCurrentlyFeaturing();
         timeOfLastFeature = System.currentTimeMillis();
       }
       if (shouldBug || currentlyBugging) {
         //bugging
-        outputVideo = bug.execute(outputVideo, bodies, kinect, openCV);
+        outputVideo = bug.execute(outputVideo, bodies, kinect, openCV, phase);
         currentlyBugging = bug.isCurrentlyBugging();
       }
       if (!(feature.isCurrentlyFeaturing() && feature.getCurrentFeature().equals(SkeletonFeature.class))) {
@@ -194,7 +200,7 @@ public class Sensor extends PApplet {
     }
     textOverlay.displayBodyCountOverlay(kinect.getBodyTrackUser().size(), phase);
     if (!currentlyFeaturing && !currentlyBugging) {
-      textOverlay.addFaceText(kinect);
+      textOverlay.addFaceText(kinect, phase);
     }
     textOverlay.info(currentTime);
     borders();
@@ -239,28 +245,6 @@ public class Sensor extends PApplet {
     kinect.init();
     kinect.setLowThresholdPC(100);
     kinect.setHighThresholdPC(4000);
-  }
-
-  private ArrayList<PImage> loadStandby(PApplet parent) {
-    ArrayList<PImage> standbys = new ArrayList<>();
-    standbys.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/standby1.png"));
-    standbys.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/standby2.png"));
-    return standbys;
-  }
-
-  private ArrayList<PImage> loadBlues(PApplet parent) {
-    ArrayList<PImage> blues = new ArrayList<>();
-    blues.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/outro/blue1.png"));
-    blues.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/outro/blue2.png"));
-    return blues;
-  }
-
-  private ArrayList<PImage> loadGlitches(PApplet parent) {
-    ArrayList<PImage> glitches = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      glitches.add(parent.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/glitch/glitch"+i+".jpg"));
-    }
-    return glitches;
   }
 
   private void reset() {

@@ -22,6 +22,7 @@ public class BugLoader implements LoadersInterface {
   private BlackAndWhiteVideo blackAndWhiteVideo;
   private Invert invert;
   private LongDownloadedStatic longDownloadedStatic;
+  private Glitches glitches;
 
   private boolean currentlyBugging;
   private long bugStartTime;
@@ -34,9 +35,10 @@ public class BugLoader implements LoadersInterface {
     blackAndWhiteVideo = new BlackAndWhiteVideo();
     invert = new Invert();
     longDownloadedStatic = new LongDownloadedStatic(parent);
+    glitches = new Glitches(parent);
   }
 
-  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV) {
+  public PImage execute(PImage liveVideo, PImage body, KinectPV2 kinect, OpenCV openCV, int phase) {
     PImage outputImage;
 
     if (currentBug != null) {
@@ -46,7 +48,12 @@ public class BugLoader implements LoadersInterface {
         currentlyBugging = false;
       }
     } else {
-      int dice = rand.nextInt(6);
+      int dice;
+      if (phase > 4) {
+        dice = rand.nextInt(6);
+      } else {
+        dice = rand.nextInt(5);
+      }
       switch (dice) {
         case 0:
           currentBug = blackAndWhiteMask;
@@ -57,8 +64,12 @@ public class BugLoader implements LoadersInterface {
         case 2:
           currentBug = invert;
           break;
-        default:
+        case 3:
+        case 4:
           currentBug = longDownloadedStatic;
+          break;
+        default:
+          currentBug = glitches;
       }
       sounds.playSound();
       currentBugLength = rand.nextInt(200) + 200;

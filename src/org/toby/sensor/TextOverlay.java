@@ -49,7 +49,7 @@ class TextOverlay {
     parent.text(phase, SET_WIDTH-70, HEIGHT_CUT+140);
   }
 
-  void addFaceText(KinectPV2 kinect) {
+  void addFaceText(KinectPV2 kinect, int phase) {
     ArrayList<KSkeleton> skeletonArray =  kinect.getSkeletonDepthMap();
     ArrayList<PImage> bodyTrackList = kinect.getBodyTrackUser();
     ArrayList<ArrayList<String>> stats = new ArrayList<>();
@@ -96,16 +96,44 @@ class TextOverlay {
         }
         int convergence = Integer.valueOf(stat.get(3)) + convChange;
 
+        ArrayList<String> maybeZero = maybeMakeZero(classText, deception, opposition, convergence, phase);
+
         parent.text(
-          "Class: " + classText + "\n" +
-            "Deception: " + deception + "%\n" +
-            "Opposition: " + opposition + "%\n" +
-            "Convergence: " + convergence + "%",
+          "Class: " + maybeZero.get(0) + "\n" +
+            "Deception: " + maybeZero.get(1) + "%\n" +
+            "Opposition: " + maybeZero.get(2) + "%\n" +
+            "Convergence: " + maybeZero.get(3) + "%",
           headX + (1950 - headX) / 9, headY - 250);
       } catch (Exception e) {
         break;
       }
     }
+  }
+
+  private ArrayList<String> maybeMakeZero(int a, int b, int c, int d, int phase) {
+    ArrayList<String> stat = new ArrayList<>();
+    if (phase == 1) {
+      stat.add(String.valueOf(a));
+      stat.add(String.valueOf(b));
+      stat.add(String.valueOf(c));
+      stat.add(String.valueOf(d));
+    } else if (phase == 2) {
+      stat.add(rand.nextInt(100) == 0 ? "0" : String.valueOf(a));
+      stat.add(rand.nextInt(100) == 0 ? "0" : String.valueOf(b));
+      stat.add(rand.nextInt(500) == 0 ? "0" : String.valueOf(c));
+      stat.add(rand.nextInt(400) == 0 ? "0" : String.valueOf(d));
+    } else if (phase == 3) {
+      stat.add(rand.nextInt(10) == 0 ? "0" : String.valueOf(a));
+      stat.add(rand.nextInt(5) == 0 ? "0" : String.valueOf(b));
+      stat.add(rand.nextInt(2) == 0 ? "0" : String.valueOf(c));
+      stat.add(rand.nextInt(10) >1 ? "0" : String.valueOf(d));
+    } else {
+      stat.add("0");
+      stat.add("0");
+      stat.add("0");
+      stat.add("0");
+    }
+    return stat;
   }
 
 }
