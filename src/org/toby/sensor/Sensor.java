@@ -44,6 +44,9 @@ public class Sensor extends PApplet {
   private boolean seen = false;
   private boolean inIntro = true;
   private boolean inOutro = false;
+  private PImage errorMessage;
+  private boolean errorMessageToBeShown = false;
+  private boolean errorMessageDone = false;
   private long outroStartTime;
 
   private static final int PHASE_ONE_LENGTH = 30000; // 30 seconds
@@ -65,6 +68,7 @@ public class Sensor extends PApplet {
   }
 
   public void setup() {
+    background(0);
     rand = new Random();
     silhouette = new SilhouetteDrawing();
     feature = new FeatureLoader(this);
@@ -78,6 +82,7 @@ public class Sensor extends PApplet {
     blues = loadBlues(this);
     glitches = loadGlitches(this);
     theChosenGlitch = rand.nextInt(10);
+    errorMessage = this.loadImage("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/error/error1.png");
     setUpKinect(this);
     setUpSounds();
     textFont(createFont("C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/vcr.ttf", 48));
@@ -123,6 +128,16 @@ public class Sensor extends PApplet {
         stopFuzz();
         image(glitches.get(theChosenGlitch), 0, HEIGHT_CUT);
         return;
+      }
+    }
+
+    if (errorMessageToBeShown) {
+      try {
+        Thread.sleep(5000); // error time
+      } catch (InterruptedException e) {
+        return;
+      } finally {
+        errorMessageToBeShown = false;
       }
     }
 
@@ -174,6 +189,14 @@ public class Sensor extends PApplet {
       outroStartTime = System.currentTimeMillis();
       return;
     }
+
+    if (phase == 2 && !errorMessageDone) {
+      image(errorMessage, 0, HEIGHT_CUT);
+      errorMessageToBeShown = true;
+      errorMessageDone = true;
+      return;
+    }
+
     PImage outputVideo;
     if (toFeature || currentlyFeaturing || shouldBug || currentlyBugging) {
       outputVideo = liveVideo;
@@ -255,6 +278,7 @@ public class Sensor extends PApplet {
     intro.setIntroComplete(false);
     timeBegin = System.currentTimeMillis();
     theChosenGlitch = rand.nextInt(10);
+    errorMessageDone = false;
   }
 
   public void mousePressed() {

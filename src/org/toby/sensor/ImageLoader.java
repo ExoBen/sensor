@@ -18,7 +18,7 @@ public class ImageLoader {
 
   public static ArrayList<PImage> loadIntros(PApplet parent) {
     ArrayList<PImage> statics = new ArrayList<>();
-    for (int i = 0; i <= 25; i++) {
+    for (int i = 0; i <= 50; i++) {
       String boots = "C:/Users/toby5/OneDrive/Work/NEoN/sensor/resources/boot/" + i + ".png";
       statics.add(parent.loadImage(boots));
     }

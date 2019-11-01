@@ -32,10 +32,13 @@ public class Intro {
         currentImage = 0;
       }
     } else if (currentImage == 25) {
-      // time of end image
+      // time of pause on last code image
       if (now - timeOfLast > 3000) {
         currentImage++;
       }
+    } else if (currentImage > 25) {
+      currentImage++;
+      timeOfLast = now;
     } else {
       // time between line changes
       if (now - timeOfLast > 80) {
@@ -43,7 +46,7 @@ public class Intro {
         timeOfLast = now;
       }
     }
-    if (currentImage == 26) {
+    if (currentImage == 50) {
       currentImage--;
       introComplete = true;
     }
