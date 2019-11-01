@@ -46,7 +46,7 @@ class TextOverlay {
     parent.textSize(48); // medium text
     parent.fill(255); // white
     parent.text(bodies, SET_WIDTH-70, HEIGHT_CUT+70);
-    parent.text(phase, SET_WIDTH-70, HEIGHT_CUT+140);
+    //    parent.text(phase, SET_WIDTH-70, HEIGHT_CUT+140);
   }
 
   void addFaceText(KinectPV2 kinect, int phase) {
@@ -65,9 +65,9 @@ class TextOverlay {
       }
       ArrayList<String> stat = new ArrayList<>();
       stat.add(String.valueOf(color % 4 + 1));
-      stat.add(String.valueOf(color / 57 % 101));
-      stat.add(String.valueOf((color / 43 % 121)));
-      stat.add(String.valueOf((color / 23 % 201) - 100));
+      stat.add(String.valueOf(color / 57 % 121));
+      stat.add(String.valueOf((color / 43 % 101)));
+      stat.add(String.valueOf((color / 23 % 151) - 50));
       stats.add(stat);
     }
     for (int k = 0; k < skeletonArray.size(); k++) {
@@ -100,9 +100,9 @@ class TextOverlay {
 
         parent.text(
           "Class: " + maybeZero.get(0) + "\n" +
-            "Deception: " + maybeZero.get(1) + "%\n" +
-            "Opposition: " + maybeZero.get(2) + "%\n" +
-            "Convergence: " + maybeZero.get(3) + "%",
+            "Threat: " + maybeZero.get(1) + "%\n" +
+            "Influence: " + maybeZero.get(2) + "%\n" +
+            "Vulnerability: " + maybeZero.get(3) + "%",
           headX + (1950 - headX) / 9, headY - 250);
       } catch (Exception e) {
         break;
